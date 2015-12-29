@@ -1,0 +1,57 @@
+// First, we're going to make some variables.
+// This is our "shorthand" that we'll use throughout the program:
+
+int red = D0; // Instead of writing D0 over and over again, we'll write blue
+// You'll need to wire an LED to this one to see it blink.
+
+int green = D1;
+
+int blue = D2;// Instead of writing D7 over and over again, we'll write led2
+// This one is the little blue LED on your board. On the Photon it is next to D7, and on the Core it is next to the USB jack.
+
+// Having declared these variables, let's move on to the setup function.
+// The setup function is a standard part of any microcontroller program.
+// It runs only once when the device boots up or is reset.
+int setBeachStatus(String value) {
+    
+    if(value == "red") {
+        digitalWrite(red, HIGH);
+        digitalWrite(blue, LOW);
+        digitalWrite(green, LOW);
+        return 0;
+    } else if(value == "green") {
+        digitalWrite(red, LOW);
+        digitalWrite(blue, LOW);
+        digitalWrite(green, HIGH);
+        return 0;
+    } else if(value == "blue") {
+        digitalWrite(red, LOW);
+        digitalWrite(blue, HIGH);
+        digitalWrite(green, LOW);
+        return 0;
+    } else if(value == "off") {
+        digitalWrite(red, LOW);
+        digitalWrite(blue, LOW);
+        digitalWrite(green, LOW);
+        return 0;
+    }
+    return 1;
+}
+
+void setup()
+
+{ 
+  
+  Particle.function("wave_map", setBeachStatus);
+  
+  pinMode(red, OUTPUT);
+  pinMode(green, OUTPUT);
+  pinMode(blue, OUTPUT);
+
+
+  
+}
+
+void loop() {
+}
+
