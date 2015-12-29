@@ -1,0 +1,35 @@
+module['exports'] = function wave_map (hook) {
+  var got = require('got');
+  var Particle = require('spark');
+  
+  got('http://magicseaweed.com/api/YOUR_API_HERE/forecast/?spot_id=1253')
+  .then(function (response) {
+    var forecast = JSON.parse(response.body);
+    var height = forecast[0].swell.components.combined.height;
+
+    var color;
+    if(height >= 10) {
+      color = "red";
+    } else if(height >= 5) {
+      color = "green";
+    } else {
+      color = "blue";
+    }
+
+    hook.res.write("Updating device with color " + color + "\n");
+    
+    return Particle.login({ accessToken: hook.env.PARTICLE_API_TOKEN })
+    .then(function () {
+      return Particle.getDevice('alscore');
+    })
+    .then(function (device) {
+      return device.callFunction("wave_map", color);
+    });
+  })
+  .then(function () {
+    hook.res.end("Done!");
+  })
+  .catch(function (error) {
+    hook.res.end("Error fetching data: " + error);
+  });
+};
